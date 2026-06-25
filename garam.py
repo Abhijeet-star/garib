@@ -5,7 +5,6 @@ import healpy as hp
 import h5py
 from scipy.interpolate import RegularGridInterpolator
 
-
 phi_res   = 1.0
 theta_res = 1.0
 theta_array = np.arange(-90, 90 + theta_res, theta_res)
@@ -32,28 +31,8 @@ def inside_rectangle_np(points, rect_bottom_left, rect_top_right, include_bounda
         mask = (xmin < px) & (px < xmax) & (ymin < py) & (py < ymax)
     return mask
 
-# param_obs = {'file': file,\
-#             'time': obstimes,\
-#             'chosen_frequency': chosen_frequency,\
-#             'site_latitude': SITE_LATITUDE,\
-#             'site_longitude': SITE_LONGITUDE,\
-#             'elevation': ELEVATION,\
-#             'nside': nside,\
-#             'l':lmax,\
-#             'b':bmax}
 
 class GalaxyElimination(object):
-    # def __init__(self, file, time, chosen_frequency, site_latitude, site_longitude, elevation, nside, l, b, radius):
-    #     self.file = file
-    #     self.time = time  # array of obstimes
-    #     self.chosen_frequency = chosen_frequency
-    #     self.site_latitude = site_latitude
-    #     self.site_longitude = site_longitude
-    #     self.elevation = elevation
-    #     self.nside = nside
-    #     self.l = l
-    #     self.b = b
-    #     self.radius = radius # LATER
     def __init__(self, **kwargs):
 
         for key, value in kwargs.items():
@@ -102,13 +81,7 @@ class GalaxyElimination(object):
         self.gc  = gc
         self.location = location
 
-    # l = 45
-    # b = 10
 
-    # rbl = (-l,-b)
-    # rtr = (+l,+b)
-
-    # lb = np.stack((lon,lat), axis=1)
 
     def fixed_radius(self):
 
@@ -144,7 +117,6 @@ class GalaxyElimination(object):
         good_timestamps   = []
         radius_all = []
         for ii in range(len(self.time)):
-            # mn = lss.LunarTopo(obstime=obstimes[ii], location=location)
             trans_local = self.gc.transform_to(AltAz(obstime=self.time[ii], location=self.location))
             az, alt     = trans_local.az.degree, trans_local.alt.degree
             ind_below_horizon       = alt < 0
@@ -163,13 +135,6 @@ class GalaxyElimination(object):
 
             idx = np.where(beam_gen[:,0] == max(beam_gen[:,0]))
             theta_c, phi_c = hp.pix2ang(self.nside, idx[0][0], nest=True)
-
-            # theta_hf, phi_hf = hp.pix2ang(16, idx_hf[0][0], nest=True)
-
-            # vec_c  = hp.ang2vec(theta_c, phi_c)
-            # vec_hf = hp.ang2vec(theta_hf, phi_hf)
-            # radius = np.arccos(np.clip(np.dot(vec_c, vec_hf), -1.0, 1.0))
-            # radius = self.fixed_radius(int(len(self.lst)/2))
             
             radius = self.radius
             npts = 1000
@@ -183,8 +148,8 @@ class GalaxyElimination(object):
             lon = np.degrees(phi_ring) 
             lat = 90 - np.degrees(theta_ring)
 
-            l = 45
-            b = 10
+            l = self.l
+            b = self.b
 
             rbl = (-l,-b)
             rtr = (+l,+b)
@@ -199,9 +164,6 @@ class GalaxyElimination(object):
             
             # msk_tstps = np.array(masked_timestamps)      # Has Galaxy Coverage
             gd_tstps  = np.array(good_timestamps)        # Galaxy is eliminated
-            # radius_all.append(radius)
 
-        # rad_arr = np.array(radius_all)
-
-        return gd_tstps
+        return np.savetxt("good_timestamps.txt", gd_tstps)
 

@@ -5,7 +5,7 @@ import healpy as hp
 import h5py
 from scipy.interpolate import RegularGridInterpolator
 from astropy.time import Time, TimeDelta
-from main_test import GalaxyElimination
+from garam import GalaxyElimination
 
 file = "DIPOLE_500times_SMOOTH.h5"
 
