@@ -1,1 +1,1 @@
-GARIB - Galactic Avoidance for RadIo Beams
+# GARIB - Galactic Avoidance for RadIo Beams
