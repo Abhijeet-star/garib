@@ -22,7 +22,6 @@ lmax  = 45
 bmax  = 10
 
 param_obs = {'file': file,\
-            'time': obstimes,\
             'chosen_frequency': chosen_frequency,\
             'site_latitude': SITE_LATITUDE,\
             'site_longitude': SITE_LONGITUDE,\

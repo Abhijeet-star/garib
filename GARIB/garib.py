@@ -5,6 +5,8 @@ import healpy as hp
 import h5py
 from scipy.interpolate import RegularGridInterpolator
 from astropy.time import Time
+from astropy.time import Time, TimeDelta
+
 
 phi_res   = 1.0
 theta_res = 1.0
@@ -74,12 +76,14 @@ class GalaxyElimination(object):
         beam_val = RegularGridInterpolator((theta_array, phi_array), beam_3D[chosen_freq_idx])
         npix = hp.nside2npix(self.nside)
         tsky = np.zeros((npix, len(freq)))
-
+        dt = TimeDelta(np.linspace(0.,24.*3600, 500), format='sec') 
+        obstimes = Time('2019-4-12 23:00:00')  + dt
 
         self.beam_val = beam_val
         self.frequency = freq
         self.lst = LST
         self.tsky = tsky
+        self.time = obstimes
 
     def coordinate_generation(self): 
         """ Generation of galactic coordinates for a given resolution
