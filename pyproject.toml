@@ -1,15 +1,22 @@
 [project]
-name = "GARIBE-Galaxy Avoidance for RadIo Antenna BEams"
-
+name = "garib"
 version = "0.0.1"
 
 description = "This packages eliminates the observation times when the beam of the radio antenna crosses the a rectangular region in the sky."
 
-licence = "RRI"
+dependencies = [
+ "numpy",
+ "astropy",
+ "healpy",
+ "scipy",
+ "h5py",
+]
+
+license = { text = "RRI" }
 
 requires-python = ">=3.11.8"
 
 authors = [
     { name = "Abhijeet S. Patil", email = "abhijeet@rrimail.rri.res.in" },
-    { name = "Sanjaya K. Chihnara, email = "sanjayakumar@rrimail.rri.res.in"}
-    ]
+    { name = "Sanjaya K. Chihnara", email = "sanjayakumar@rrimail.rri.res.in" },
+]
