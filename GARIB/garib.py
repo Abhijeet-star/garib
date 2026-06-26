@@ -4,6 +4,7 @@ from astropy.coordinates import SkyCoord, EarthLocation, AltAz
 import healpy as hp
 import h5py
 from scipy.interpolate import RegularGridInterpolator
+from astropy.time import Time
 
 phi_res   = 1.0
 theta_res = 1.0
@@ -216,12 +217,17 @@ class GalaxyElimination(object):
 
 
             if inside_rectangle_np((lb), rbl, rtr).any() == True:
-                masked_timestamps.append(self.time[ii])
+                observing_time = Time(self.time[ii], scale='utc', location=self.location)
+                LST            = observing_time.sidereal_time('mean').value 
+                masked_timestamps.append(LST)
+
             else:
-                good_timestamps.append(self.time[ii])
+                observing_time = Time(self.time[ii], scale='utc', location=self.location)
+                LST            = observing_time.sidereal_time('mean').value 
+                good_timestamps.append(LST)
             
-            # msk_tstps = np.array(masked_timestamps)      # Has Galaxy Coverage
+            msk_tstps = np.array(masked_timestamps)      # Has Galaxy Coverage
             gd_tstps  = np.array(good_timestamps)        # Galaxy is eliminated
 
-        return np.savetxt("good_timestamps.txt", gd_tstps)
+        return np.savetxt('badtimes.txt', msk_tstps)
 

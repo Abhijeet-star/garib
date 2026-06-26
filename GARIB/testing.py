@@ -14,7 +14,7 @@ SITE_LONGITUDE      = 78.85555556 #/* 78.96416667 deg for Hanle */
 ELEVATION           = 4500
 
 dt = TimeDelta(np.linspace(0.,24.*3600, 500), format='sec') #Will NOT take ~5 min
-obstimes = Time('2022-10-15 00:00:00') + dt
+obstimes = Time('2019-4-12 23:00:00')  + dt
 
 chosen_frequency = 65
 nside = 16
