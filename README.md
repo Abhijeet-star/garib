@@ -2,6 +2,16 @@
 
 This package is useful for radio astronomy experiments where you need to select/avoid particular regions of the sky. 
 
+## Motivation
+
+Any radio antenna has a beam pattern which is the response of the antenna as a function of theta and phi. For simplicity, we consider an azimuthally symmetric beam pattern which follows sine-squared function. When this beam pattern is projected onto the sky, we have a circular projection. Now the measurement is the summation of this disc with sky intensity which is predominately diffuse galactic emission caused by synchrotron radiation. The emissions from the galactic plane are difficult to model as there are various physical processes happening along with synchrotron process. 
+
+So it is always better to avoid these regions. This is the motivation for this package. 
+
+## How it works
+
+We chose a circle with radius corresponding to the Full Width at Half Maxima (FWHM) of the beam. A rectangular Galactic region is chosen for now which extends 45 degrees in latitude and 10 degrees in longitude. At a particular time, if the circle touches/crosses the rectangle, the time of observation is noted. In the end, we get a "badtimes.txt" file which has all the times for which the beam intersects the galacic region.
+
 ## Installation
 
 ```
