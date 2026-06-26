@@ -1,7 +1,7 @@
 [project]
-name = "GARAM-Galaxy Avoidance for Radio Antenna beaMs"
+name = "GARIBE-Galaxy Avoidance for RadIo Antenna BEams"
 
-version = "0.1"
+version = "0.0.1"
 
 description = "This packages eliminates the observation times when the beam of the radio antenna crosses the a rectangular region in the sky."
 

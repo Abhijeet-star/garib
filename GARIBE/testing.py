@@ -5,7 +5,7 @@ import healpy as hp
 import h5py
 from scipy.interpolate import RegularGridInterpolator
 from astropy.time import Time, TimeDelta
-from garam import GalaxyElimination
+from garibe import GalaxyElimination
 
 file = "DIPOLE_500times_SMOOTH.h5"
 
@@ -30,6 +30,8 @@ param_obs = {'file': file,\
             'nside': nside,\
             'l':lmax,\
             'b':bmax}
+
+# Galaxy Avoidance for RadIo antenna BEams: GARIBE
 
 GE = GalaxyElimination(**param_obs)
 GE.time_elimination()

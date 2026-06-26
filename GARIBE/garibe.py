@@ -47,6 +47,24 @@ class GalaxyElimination(object):
 
 
     def read_beam(self):
+        """ Reading the beam-file:
+        
+        Reads the .h5 file provided
+
+        Args:
+        file (.h5)               : An output file of the beam convolved with sky
+        nside (int)              : Resolution of the sky-map 
+        chosen_frequency (float) : Frequency for the beam
+        
+        
+        Returns:
+        beam_val (func)    : Interpolated beam function
+        frequency (array)  : Reads frequency from the file
+        lst (array)        : Reads LST from the file
+        tsky (2D array)    : 2D array of number of pixels and frequencies
+        
+        """
+
         f = h5py.File(self.file, 'r')
         beam_3D = f['ancillary_prod']['beam'][()]
         freq = f['index_map']['frequency'][()]
@@ -63,6 +81,18 @@ class GalaxyElimination(object):
         self.tsky = tsky
 
     def coordinate_generation(self): 
+        """ Generation of galactic coordinates for a given resolution
+        
+        Args:
+        nside (int)              : Resolution of the sky-map 
+        
+        
+        Returns:
+
+        l-coordinate (array): Galactic longitude
+        b-coordinate (array): Galactic latitude
+        
+        """
         npix = hp.nside2npix(self.nside)
         pixels = np.arange(npix)
         theta, phi = hp.pix2ang(self.nside, pixels, nest=True)
@@ -75,6 +105,21 @@ class GalaxyElimination(object):
 
 
     def set_location(self):
+        """Choosing location on Earth
+
+        Args:
+        site latitude [degrees] (float)  : Latitude of site location
+        site longitude [degrees] (float) : Longitude of site location
+        height [meters] (float)          : Elevation above the sea level
+        
+        ll_coordinate [degrees]  : latitude co-ordinate array for the healpy map
+        bb_coordinate [degrees]  : longitude co-ordinate array for the healpy map
+
+        Returns
+        location : Location information for the particular location on Earth
+        gc : Galactic coordinates for the galactic map
+        
+        """
         location = EarthLocation(lat=self.site_latitude*u.deg, lon=self.site_longitude*u.deg, height=self.elevation*u.m)
         gc       = SkyCoord(l=self.ll_coordinate*u.radian, b=self.bb_coordinate*u.radian,\
                     frame='galactic')
@@ -84,7 +129,11 @@ class GalaxyElimination(object):
 
 
     def fixed_radius(self):
+        """ Fixing radius of the beam
 
+        Computes the radius of the beam for an observation time where the beam lies near the center of the galactic plane
+
+        """
         trans_local             = self.gc.transform_to(AltAz(obstime=self.time[int(len(self.lst)/2)], location=self.location))
         az, alt                 = trans_local.az.degree, trans_local.alt.degree
         beam_gen = np.zeros_like(self.tsky)
@@ -113,9 +162,15 @@ class GalaxyElimination(object):
     
 
     def time_elimination(self):
+        """
+        Elimination of observation times with Galaxy
+
+        This function eliminates the times of observations where the beam crosses the galaxy.
+        
+        
+        """
         masked_timestamps = []
         good_timestamps   = []
-        radius_all = []
         for ii in range(len(self.time)):
             trans_local = self.gc.transform_to(AltAz(obstime=self.time[ii], location=self.location))
             az, alt     = trans_local.az.degree, trans_local.alt.degree
